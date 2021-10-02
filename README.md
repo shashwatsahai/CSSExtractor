@@ -1,6 +1,8 @@
 # CSSExtractor
 This tool extracts CSS with source files for active styles and save the output to a JSON file
 
+<h2>Please create a Pull Request in case you add/fix a feature so that others can benefit from it</h2>
+
 Required - 
  The getC() function starts parsing from $0. Make sure your $0 points to body element. Open devtools and click on the element or pass an element in code<br/>
  Run getC function with the $0 or element as parameter<br/>
