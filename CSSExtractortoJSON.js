@@ -4,17 +4,19 @@ github:https://github.com/shashwatsahai/
 */
 
 var arrCss=[];
-var completeAns=[];
 var last="";
 var currstyle=[];
-//$0 should not be null
-function getC($0) {
+
+function getC(queryElement, writer) {
     debugger;
-    function convertLink(callback) {
+    function convertLink(queryElement, resultWriter) {
         var links = document.querySelectorAll('link[rel="stylesheet"][href]:not([ajaxRulesByCssUsed])');
         var loadedExternalCss = 0;
         if (links.length === 0) {
-            callback();
+            let completeAns = handleCssTxt(queryElement);
+            if (resultWriter) {
+              resultWriter(completeAns);
+            }
         } else {
             for (var i = 0; i < links.length; i++) {
                 (function(i) {
@@ -45,7 +47,10 @@ function getC($0) {
                             links[i].setAttribute('ajaxRulesByCssUsed','loaded');
                             loadedExternalCss++;
                             if (loadedExternalCss === links.length) {
-                                callback();
+                                let completeAns = handleCssTxt(queryElement);
+                                if (resultWriter) {
+                                  resultWriter(completeAns);
+                                }
                             }
                         }
                     }
@@ -101,6 +106,7 @@ function getC($0) {
     }
 
     function getCssTxt(ele){
+        let completeAns = [];
         var _ele, arr = [], arrSel, arrSelMatched, domlist=[],
             rules, keyFram=[], keyFramUsed=[],
             // baseURI,
@@ -205,34 +211,14 @@ function getC($0) {
                 };
             };
         };
-        return arrCss;
+        return completeAns;
     }
 
     // color  rgb→hex
-    function handleCssTxt() {
-        var arr = getCssTxt($0),
-            obj = {},
-            s = '';
-        for (var x = 0; x < arr.length; x++) {
-            obj[arr[x]] = true;
-        };
-        for (i in obj) {
-            s += i;
-        }
-        s = s.replace(/ rgb\((\d{1,3}), (\d{1,3}), (\d{1,3})\)/g, function(a, p1, p2, p3) {
-            function to2w(n){
-                var s=(n * 1).toString(16);
-                if(n<16){
-                    return '0'+s;
-                }
-                return s;
-            }
-            return ' #' + ( to2w(p1) + to2w(p2) + to2w(p3) ).replace(/((.)\2)((.)\4)((.)\6)/,'$2$4$6');
-        }).replace(/(['"']?)微软雅黑\1/,'"Microsoft Yahei"')
-        .replace(/(['"']?)宋体\1/,' simsun ');
-       // console.log($0.outerHTML.replace(/<script>[\s\S]*?<\/script>/g,''));
-            
+    function handleCssTxt(queryElement) {
+        return getCssTxt(queryElement);
     }
+
     function isutf8(bytes) {
         var i = 0;
         while (i < bytes.length) {
@@ -2394,9 +2380,8 @@ function getC($0) {
     return URI;
   }));
   
-  function writedata(){
-    test=completeAns;
-    var data = JSON.stringify(test);
+  function writedata(result){
+    var data = JSON.stringify(result);
     var name=window.location.href.split('=')[2];
     
     var href = "data:text/json;charset=utf-8," + encodeURIComponent(data),
@@ -2407,7 +2392,6 @@ function getC($0) {
     anchor.click();
 
   }
-    convertLink(handleCssTxt);
-    writedata();
-    
+
+  convertLink(queryElement || $0, writer || writedata);
 }
